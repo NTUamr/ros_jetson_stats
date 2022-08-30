@@ -34,6 +34,7 @@ from diagnostic_msgs.msg import DiagnosticArray, DiagnosticStatus, KeyValue
 from ros_jetson_stats.srv import nvpmodel, nvpmodelResponse, jetson_clocks, jetson_clocksResponse, fan, fanResponse
 from datetime import timedelta
 import jtop
+from std_msgs.msg import Float32
 # Import Diagnostic status converters
 from ros_jetson_stats.utils import (
     other_status,
@@ -61,6 +62,8 @@ class ROSJtop:
         self.arr = DiagnosticArray()
         # Initialization ros publisher
         self.pub = rospy.Publisher('/diagnostics', DiagnosticArray, queue_size=1)
+        self.GPU_pub = rospy.Publisher('/GPU_temp', Float32, queue_size=1)
+        self.CPU_pub = rospy.Publisher('/CPU_temp', Float32, queue_size=1)
         # Initialize services server
         rospy.Service('/jtop/nvpmodel', nvpmodel, self.nvpmodel_service)
         rospy.Service('/jtop/jetson_clocks', jetson_clocks, self.jetson_clocks_service)
@@ -144,6 +147,13 @@ class ROSJtop:
         # Update status jtop
         rospy.logdebug("jtop message %s" % rospy.get_time())
         self.pub.publish(self.arr)
+
+        for key, value in jetson.temperature.items():
+            if key == "GPU":
+                self.GPU_pub.publish(value)
+            if key == "CPU":
+                self.CPU_pub.publish(value)
+
 
 
 def wrapper():

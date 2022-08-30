@@ -27,7 +27,8 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 <launch>
     <!-- Run ROS jetson stats with default configuration -->
-    <node pkg="ros_jetson_stats" type="jetson_stats.py" name="ros_jetson_stats" required="true" output="screen"/>
+    <node pkg="ros_jetson_stats" type="jetson_stats.py" name="ros_jetson_stats_" required="true" output="screen"/>
+
 
     <!-- Enable a base diagnostic aggregator to read the status of your NVIDIA Jetson -->
     <node pkg="diagnostic_aggregator" type="aggregator_node" name="diagnostic_aggregator" clear_params="true">
